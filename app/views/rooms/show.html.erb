@@ -11,7 +11,13 @@
         <%= r.user.name %>さん
       </a>
   </strong>
+
   </div>
+<% end %>
+<p>ルームに招待する</p>
+<%= form_with model: @room, local: true, url: join_user_room_path, method: :pach do |f|%>
+  <%= f.text_field :join_user, placeholder: "招待したい人のメールアドレスを入力してください" %>
+  <%= f.submit "送信する" %>
 <% end %>
 #// ルーム内のユーザー表示部分
 

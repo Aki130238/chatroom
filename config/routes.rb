@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
-  get 'sessions/new'
-  get 'sessions/create'
-  get 'sessions/destroy'
+  root :to => 'users#index'
   resources :sessions, only: [:new, :create, :destroy]
   resources :rooms do
     resources :messages
+    member do
+      post 'join_user'
+    end
   end
 
   resources :posts

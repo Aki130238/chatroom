@@ -15,35 +15,6 @@
   <%= @user.password %>
 </p>
 
-
-
-
-
-<%
-=begin
-%>
-
-<% if @user.id == current_user.id %>    #現在ログインしているユーザーではない場合
-  <% @receiveUser.each do |u| %>%   #@userが参加しているルームを取り出す
-      <li><%= link_to "#{}さんとのダイレクトメッセージ", room_path(u.room_id) %></li>
-  <% end %>
-<% else %>    #現在ログインしているユーザーではない場合
-  <% if @haveRoom == true %>    #既にルームが作成されている場合は
-    <%= link_to "ダイレクトメッセージ", room_path %>    #そのチャットルームに遷移するボタンを表示
-  <% else %>
-    <%= form_with model: @room, local: true do |f|%>    #roomsテーブルに情報を送信
-      <%= fields_for @RoomUser do |r| %>    #room_usersテーブルに情報を送信
-        <%= r.hidden_field :user_id, value: @user.id %>  room_usersテーブルにuser_idを含める
-      <% end %>
-      <%= f.submit "チャットを始める" %>
-    <% end %>
-  <% end %>
-<% end %>
-
-<%
-=end
-%>
-
 <% if @user.id == current_user.id %>    #現在ログインしているユーザーではない場合
   <% @receiveUser.each do |u| %>%   #@userが参加しているルームを取り出す
       <li><%= link_to "#{User.find(u.room.room_users.where.not(user_id: @user.id).first.user_id).name}さんとのダイレクトメッセージ", room_path(u.room.room_users.where.not(user_id: @user.id).first.room_id) %></li>
