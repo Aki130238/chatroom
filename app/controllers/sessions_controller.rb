@@ -22,7 +22,4 @@ class SessionsController < ApplicationController
   end
 end
 
-def login_required
-  redirect_to new_sessions_path unless current_user
-end
 

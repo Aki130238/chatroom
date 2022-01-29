@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 2022_01_26_114954) do
   enable_extension "plpgsql"
 
   create_table "messages", force: :cascade do |t|
+    t.string "content"
     t.bigint "room_id", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -43,7 +44,6 @@ ActiveRecord::Schema.define(version: 2022_01_26_114954) do
   end
 
   create_table "rooms", force: :cascade do |t|
-    t.string "name"
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
