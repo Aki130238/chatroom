@@ -12,7 +12,7 @@ class UsersController < ApplicationController
     @currentRoomUser = RoomUser.where(user_id: current_user.id)  #current_userが既にルームに参加しているか判断
     @receiveUser = RoomUser.where(user_id: @user.id)  #他の@userがルームに参加しているか判断
 
-    unless @user.id == current_user.id  #current_userと@userが一致していなければ
+    # unless @user.id == current_user.id  #current_userと@userが一致していなければ
       @currentRoomUser.each do |cu|    #current_userが参加していルームを取り出す
         @receiveUser.each do |u|    #@userが参加しているルームを取り出す
           if cu.room_id == u.room_id    #current_userと@userのルームが同じか判断(既にルームが作られているか)
@@ -30,7 +30,7 @@ class UsersController < ApplicationController
         @RoomUser = RoomUser.new
         #//新しいインスタンスを生成
       end
-    end
+    # end
   end
 
   # GET /users/new
