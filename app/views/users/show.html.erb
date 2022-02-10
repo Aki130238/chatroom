@@ -1,21 +1,3 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <strong>Name:</strong>
-  <%= @user.name %>
-</p>
-
-<p>
-  <strong>Email:</strong>
-  <%= @user.email %>
-</p>
-
-<p>
-  <strong>Password:</strong>
-  <%= @user.password %>
-</p>
-
-
 
 <% if @user.id == current_user.id %>    <!-- 現在ログインしているユーザーではない場合 -->
   <%= link_to "チャットルーム一覧", rooms_path %>    <!-- そのチャットルームに遷移するボタンを表 -->
@@ -26,8 +8,7 @@
     <%= f.submit "ダイレクトメッセージを始める" %>
   <% end %>    <!-- 現在ログインしているユーザーではない場合 -->
 <% else %>   <!-- 既にルームが作成されている場合は -->
-  <%= link_to "ダイレクトメッセージを見る", room_path(RoomUser.where(user_id: @user.id).or(RoomUser.where(user_id: current_user.id)).last.room_id) %>
-  <%binding.irb%>
+  <%= link_to "ダイレクトメッセージを見る", room_path(@pair_rooms.find_by(user_id: @user.id).room_id) %>
 <% end %>
 
 

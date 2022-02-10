@@ -11,7 +11,8 @@ class UsersController < ApplicationController
   def show
     @currentRoomUser = RoomUser.where(user_id: current_user.id)  #current_userが既にルームに参加しているか判断
     @receiveUser = RoomUser.where(user_id: @user.id)  #他の@userがルームに参加しているか判断
-
+    @pair_room_ids = RoomUser.group(:room_id).having('count(*) <= ?', 2).count.keys
+    @pair_rooms = RoomUser.where(room_id: @pair_room_ids)
     # unless @user.id == current_user.id  #current_userと@userが一致していなければ
       @currentRoomUser.each do |cu|    #current_userが参加していルームを取り出す
         @receiveUser.each do |u|    #@userが参加しているルームを取り出す

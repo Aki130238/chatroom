@@ -4,8 +4,13 @@
 
 <table>
   <tbody>
-      <% @join_rooms.each do |r| %>   <!-- @userが参加しているルームを取り出す -->
-        <li><%= link_to "#{r.room.name }のチャットルーム", room_path(r.room.id) %></li>
+      <% @join_rooms.each do |r| %> 
+        <li><%= link_to "#{
+          # User.find(RoomUser.where(room_id: r.room_id).where.not(user_id: current_user).last.user_id).name
+          RoomUser.group(:room_id).having('count(*) <= ?', 2).count.keys.include?(r.room_id) ?
+          # User.find(RoomUser.where(room_id: r.room_id).where.not(user_id: current_user)).size >= 3　?
+          User.find(RoomUser.where(room_id: r.room_id).where.not(user_id: current_user).last.user_id).name + "さんと" : Room.find(RoomUser.where(room_id: r.room_id).where.not(user_id: current_user).last.room_id).name
+          }の#{'チャットルーム'}", room_path(r.room.id) %></li>
       <% end %>
   </tbody>
 </table>
