@@ -3,7 +3,7 @@
 <div class="chat-room">
   <h1>メッセージ</h1>
   <!--  ルーム内のユーザー表示部分 -->
-  <% @RoomUsers.each do |r| %>
+  <% @room_users.each do |r| %>
   <div class="user-name">
   <strong>
       <a class="rooms-user-link" href="/users/<%= r.user.id %>">
@@ -13,21 +13,6 @@
 
   </div>
 <% end %>
-
-<%
-=begin
-%>
-
-<p>ルームに招待する</p>
-<%= form_with model: @room, local: true, url: join_user_room_path, method: :pach do |f|%>
-  <%= f.text_field :join_user, placeholder: "招待したい人のメールアドレスを入力してください" %>
-  <%= f.submit "送信する" %>
-<% end %>
-
-<%
-=end
-%>
-
 
 <!-- ルーム内のユーザー表示部分 -->
 
@@ -54,7 +39,7 @@
 
   <!-- メッセージ投稿フォーム -->
   <div class="posts">
-    <%= form_with model: @message, local: true ,url: room_messages_path(@RoomUsers[0].room_id) do |f| %>
+    <%= form_with model: @message, local: true ,url: room_messages_path(params[:id]) do |f| %>
       <%= f.text_field :content, placeholder: "メッセージを入力してください" %>
       <%= f.hidden_field :room_id, value: @room.id %>
       <%= f.submit "送信する" %>

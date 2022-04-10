@@ -1,16 +1,18 @@
-
-<% if @user.id == current_user.id %>    <!-- 現在ログインしているユーザーではない場合 -->
-  <%= link_to "チャットルーム一覧", rooms_path %>    <!-- そのチャットルームに遷移するボタンを表 -->
-<% elsif RoomUser.find_by(user_id: @user.id).nil? %>
-  <%= form_with model: @room, local: true do |f|%>    <!-- roomsテーブルに情報を送信 -->
-    <%= f.hidden_field 'user_ids', multiple: true, :value => @user.id %>
-    <%= f.hidden_field 'user_ids', multiple: true, :value => current_user.id %>
-    <%= f.submit "ダイレクトメッセージを始める" %>
-  <% end %>    <!-- 現在ログインしているユーザーではない場合 -->
-<% else %>   <!-- 既にルームが作成されている場合は -->
-  <%= link_to "ダイレクトメッセージを見る", room_path(@pair_rooms.find_by(user_id: @user.id).room_id) %>
+<h1><%= @user.name %></h1>
+<% if @user == current_user %>
+  <%= link_to "チャットルーム一覧", rooms_path  %>
+<% else %>
+  <% if @userCurrentPairRoomId.present? %>
+    <%= link_to "ダイレクトメッセージを見る", room_path(@havePairRoomId) %>
+  <% else %>
+    <%= form_with model: Room.new, local: true, url: rooms_path do |f|%>    <!-- roomを作成する情報を送信 -->
+      <%= f.hidden_field 'user_ids', multiple: true, value: current_user.id %>
+      <%= f.hidden_field 'user_ids', multiple: true, value: @user.id %>
+      <%= f.hidden_field 'recipient_id', value: @user.id %>
+      <%= f.submit "ダイレクトメッセージを始める" %>
+    <% end %>
+  <% end %>
 <% end %>
-
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

@@ -3,9 +3,9 @@ Rails.application.routes.draw do
   resources :sessions, only: [:new, :create, :destroy]
   resources :rooms do
     resources :messages
-    member do
-      post 'join_user'
-    end
+    # member do
+    #   post 'join_user'
+    # end
   end
 
   resources :posts

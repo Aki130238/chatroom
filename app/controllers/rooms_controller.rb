@@ -12,19 +12,28 @@ class RoomsController < ApplicationController
   end
 
   def create
+    @pairRoomIds = RoomUser.group(:room_id).having('count(*) <= ?', 2).size.keys
+    @pairRooms = RoomUser.where(room_id: @pairRoomIds)
+    @havePairRoom = @pairRooms.where(user_id: params[:room][:user_ids])
+    @userCurrentPairRoomId = @havePairRoom.group(:room_id).having('count(*) = ?', 2).size.keys
+    @havePairRoomId = Room.find(@userCurrentPairRoomId.first) if @userCurrentPairRoomId.present?
+
     @room = current_user.rooms.build(room_params)
-    @room.save
-    redirect_to room_path(@room)
+    if @havePairRoomId.blank?
+      @room.save
+      redirect_to room_path(@room), notice: "ルームを作成しました"
+    else
+      redirect_to rooms_path, notice: "既にルームが存在しています"
+    end
   end
 
   def show
     @room = Room.find(params[:id])
+    @room_users = @room.room_users
     if RoomUser.where(user_id: current_user.id, room_id: @room.id).present?
       @messages = @room.messages
       @message = Message.new
       @RoomUsers = @room.room_users
-    else
-      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -35,17 +44,14 @@ class RoomsController < ApplicationController
   end
   
   def room_params
-    params.require(:room).permit(:name, {user_ids: []}).merge(user_id: current_user.id)
+    # if params.include?(:room)
+      params.require(:room).permit(:name, {user_ids: []}).merge(user_id: current_user.id) 
+    # else
+    #   params.permit(:name, {user_ids: []}, :recipient_id).merge(user_id: current_user.id)
+    # end
   end
   
   def have_rooms
     @have_rooms = Room.where(user_id: current_user.id)
   end
-  # def join_user
-  #   @room = Room.find(params[:id])
-  #   unless RoomUser.where(user_id: join_room_user.id, room_id: @room.id).present?
-  #     RoomUser.create(user_id: join_room_user.id, room_id: @room.id)
-  #     redirect_to room_path(@room.id)
-  #   end
-  # end
 end
