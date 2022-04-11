@@ -9,11 +9,9 @@ class UsersController < ApplicationController
 
   # GET /users/1 or /users/1.json
   def show
-    # binding.irb
-    @room = Room.new
-    @pairRoomIds = RoomUser.group(:room_id).having('count(*) <= ?', 2).size.keys
-    @pairRooms = RoomUser.where(room_id: @pairRoomIds)
-    @havePairRoom = @pairRooms.where(user_id: @user.id).or(@pairRooms.where(user_id: current_user.id))
+    @pairRoomIds = RoomUser.group(:room_id).having('count(*) <= ?', 2).size.keys #1対1のRoomIDを確認する
+    @pairRooms = RoomUser.where(room_id: @pairRoomIds) #1対1のRoomを取り出す
+    @havePairRoom = @pairRooms.where(user_id: @user.id).or(@pairRooms.where(user_id: current_user.id)) #自分か相手が参加してる1対1のルームを絞り込む
     @userCurrentPairRoomId = @havePairRoom.group(:room_id).having('count(*) = ?', 2).size.keys
     @havePairRoomId = Room.find(@userCurrentPairRoomId.first) if @userCurrentPairRoomId.present?
   end

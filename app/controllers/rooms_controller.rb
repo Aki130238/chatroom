@@ -44,11 +44,7 @@ class RoomsController < ApplicationController
   end
   
   def room_params
-    # if params.include?(:room)
-      params.require(:room).permit(:name, {user_ids: []}).merge(user_id: current_user.id) 
-    # else
-    #   params.permit(:name, {user_ids: []}, :recipient_id).merge(user_id: current_user.id)
-    # end
+    params.require(:room).permit(:name, {user_ids: []}).merge(user_id: current_user.id) 
   end
   
   def have_rooms
